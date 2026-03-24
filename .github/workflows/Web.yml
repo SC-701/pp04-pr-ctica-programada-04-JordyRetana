@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: WebProduction
+      name: WEB
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
