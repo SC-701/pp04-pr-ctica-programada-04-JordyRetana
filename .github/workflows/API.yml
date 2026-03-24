@@ -1,0 +1,95 @@
+name: Deploy Vehiculo API to Azure
+
+env:
+  AZURE_WEBAPP_NAME: apijordy
+  AZURE_WEBAPP_PACKAGE_PATH: 'Vehiculo.API/API'
+  DOTNET_VERSION: '8.0'
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - 'Vehiculo.API/BD/**'
+      - 'Vehiculos.WEB/**'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Set up dependency caching
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: |
+          cd Vehiculo.API
+          dotnet restore Abstraccciones/Abstraccciones.csproj
+          dotnet restore DA/DA.csproj
+          dotnet restore Flujo/Flujo.csproj
+          dotnet restore Reglas/Reglas.csproj
+          dotnet restore Servicios/Servicios.csproj
+          dotnet restore API/API.csproj
+
+      - name: Build projects (excluding BD)
+        run: |
+          cd Vehiculo.API
+          dotnet build Abstraccciones/Abstraccciones.csproj --configuration Release --no-restore
+          dotnet build DA/DA.csproj --configuration Release --no-restore
+          dotnet build Flujo/Flujo.csproj --configuration Release --no-restore
+          dotnet build Reglas/Reglas.csproj --configuration Release --no-restore
+          dotnet build Servicios/Servicios.csproj --configuration Release --no-restore
+          dotnet build API/API.csproj --configuration Release --no-restore
+
+      - name: Run tests
+        run: |
+          cd Vehiculo.API
+          dotnet test API/API.csproj --no-restore --configuration Release || echo "No tests found"
+
+      - name: Publish API
+        run: dotnet publish Vehiculo.API/API/API.csproj -c Release -o ./publish --no-restore
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: .net-app
+          path: ./publish
+
+  deploy:
+    permissions:
+      contents: none
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: Production
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: .

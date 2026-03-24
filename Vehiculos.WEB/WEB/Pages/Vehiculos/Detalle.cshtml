@@ -1,0 +1,99 @@
+﻿@page
+@model Web.Pages.Vehiculos.DetalleModel
+@{
+    ViewData["Title"] = "Detalle del Vehículo";
+}
+
+<section class="vehicle-page">
+    <div class="vehicle-wrapper">
+        <div class="vehicle-hero">
+            <div class="vehicle-hero-content">
+                <div>
+                    <span class="vehicle-kicker">
+                        <i class="bi bi-car-front-fill me-2"></i>SC-701 · Módulo de Vehículos
+                    </span>
+                    <h1 class="vehicle-title">Detalle del Vehículo</h1>
+                    <p class="vehicle-subtitle">
+                        Consulta la información completa del vehículo registrado en el sistema.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-wrapper">
+            <div class="detail-card">
+                <div class="detail-header">
+                    <img src="~/assets/img/car.png" alt="Vehículo" />
+                    <span class="badge">@Html.DisplayFor(m => m.vehiculo.Anio)</span>
+                    <h1>@Html.DisplayFor(m => m.vehiculo.Marca) @Html.DisplayFor(m => m.vehiculo.Modelo)</h1>
+                    <p class="mb-0">
+                        <i class="bi bi-tag me-1"></i>
+                        Placa: @Html.DisplayFor(m => m.vehiculo.Placa)
+                    </p>
+                </div>
+
+                <div class="detail-content">
+                    <div class="info-section">
+                        <div class="info-group">
+                            <h3>Información general</h3>
+
+                            <div class="info-item">
+                                <span class="info-label">Marca</span>
+                                <span class="info-value">@Html.DisplayFor(m => m.vehiculo.Marca)</span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Modelo</span>
+                                <span class="info-value">@Html.DisplayFor(m => m.vehiculo.Modelo)</span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Placa</span>
+                                <span class="info-value">@Html.DisplayFor(m => m.vehiculo.Placa)</span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Año</span>
+                                <span class="info-value">@Html.DisplayFor(m => m.vehiculo.Anio)</span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Color</span>
+                                <span class="info-value">@Html.DisplayFor(m => m.vehiculo.Color)</span>
+                            </div>
+                        </div>
+
+                        <div class="info-group">
+                            <h3>Información del propietario</h3>
+
+                            <div class="info-item">
+                                <span class="info-label">Correo electrónico</span>
+                                <span class="info-value">@Html.DisplayFor(m => m.vehiculo.CorreoPropietario)</span>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Teléfono</span>
+                                <span class="info-value">@Html.DisplayFor(m => m.vehiculo.TelefonoPropietario)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="price-box">
+                        <div class="label">Precio registrado</div>
+                        <div class="value">@Html.DisplayFor(m => m.vehiculo.Precio)</div>
+                    </div>
+
+                    <div class="detail-actions">
+                        <a class="btn-form-secondary" asp-page="./Index">
+                            <i class="bi bi-arrow-left-circle me-1"></i> Regresar
+                        </a>
+
+                        <a class="btn-form-primary" asp-page="./Editar" asp-route-id="@Model.vehiculo.Id">
+                            <i class="bi bi-pencil-square me-1"></i> Editar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
