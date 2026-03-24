@@ -34,18 +34,18 @@ jobs:
 
       # 🔹 Restore solo el proyecto Web
       - name: Restore dependencies
-        run: dotnet restore Vehiculos.WEB/Web/Web.csproj
+        run: dotnet restore Vehiculos.WEB/WEB/WEB.csproj
 
       # 🔹 Build (esto compila sus dependencias automáticamente)
       - name: Build Web Project
-        run: dotnet build Vehiculos.WEB/Web/Web.csproj --configuration Release --no-restore
+        run: dotnet build Vehiculos.WEB/WEB/WEB.csproj --configuration Release --no-restore
 
       - name: Run tests (if any)
-        run: dotnet test Vehiculos.WEB/Web/Web.csproj --no-restore --configuration Release || echo "No tests found"
+        run: dotnet test Vehiculos.WEB/WEB/WEB.csproj --no-restore --configuration Release || echo "No tests found"
 
       # 🔹 Publish SOLO el proyecto Web
       - name: Publish Web Project
-        run: dotnet publish Vehiculos.WEB/Web/Web.csproj -c Release -o ./publish --no-build
+        run: dotnet publish Vehiculos.WEB/WEB/WEB.csproj -c Release -o ./publish --no-build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
