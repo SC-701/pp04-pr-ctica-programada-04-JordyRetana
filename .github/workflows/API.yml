@@ -1,15 +1,15 @@
 name: Deploy Vehiculo API to Azure
 
 env:
-  AZURE_WEBAPP_NAME: apijordy
-  AZURE_WEBAPP_PACKAGE_PATH: 'Vehiculo.API/API'
+  AZURE_WEBAPP_NAME: APIJORDY
+  AZURE_WEBAPP_PACKAGE_PATH: 'Vehiculos.API/API'
   DOTNET_VERSION: '8.0'
 
 on:
   push:
     branches: [ "main" ]
     paths-ignore:
-      - 'Vehiculo.API/BD/**'
+      - 'Vehiculos.API/BD/**'
       - 'Vehiculos.WEB/**'
 
   workflow_dispatch:
@@ -39,31 +39,31 @@ jobs:
 
       - name: Restore dependencies
         run: |
-          cd Vehiculo.API
-          dotnet restore Abstraccciones/Abstraccciones.csproj
+          cd Vehiculos.API
+          dotnet restore Abstracciones/Abstracciones.csproj
           dotnet restore DA/DA.csproj
           dotnet restore Flujo/Flujo.csproj
-          dotnet restore Reglas/Reglas.csproj
+          dotnet restore Reaglas/Reglas.csproj
           dotnet restore Servicios/Servicios.csproj
           dotnet restore API/API.csproj
 
       - name: Build projects (excluding BD)
         run: |
-          cd Vehiculo.API
-          dotnet build Abstraccciones/Abstraccciones.csproj --configuration Release --no-restore
+          cd Vehiculos.API
+          dotnet build Abstracciones/Abstracciones.csproj --configuration Release --no-restore
           dotnet build DA/DA.csproj --configuration Release --no-restore
           dotnet build Flujo/Flujo.csproj --configuration Release --no-restore
-          dotnet build Reglas/Reglas.csproj --configuration Release --no-restore
+          dotnet build Reaglas/Reglas.csproj --configuration Release --no-restore
           dotnet build Servicios/Servicios.csproj --configuration Release --no-restore
           dotnet build API/API.csproj --configuration Release --no-restore
 
       - name: Run tests
         run: |
-          cd Vehiculo.API
+          cd Vehiculos.API
           dotnet test API/API.csproj --no-restore --configuration Release || echo "No tests found"
 
       - name: Publish API
-        run: dotnet publish Vehiculo.API/API/API.csproj -c Release -o ./publish --no-restore
+        run: dotnet publish Vehiculos.API/API/API.csproj -c Release -o ./publish --no-restore
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

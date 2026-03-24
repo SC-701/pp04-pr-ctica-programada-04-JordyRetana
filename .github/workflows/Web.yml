@@ -1,7 +1,7 @@
 name: Build and deploy Web App
 
 env:
-  AZURE_WEBAPP_NAME: webjordy
+  AZURE_WEBAPP_NAME: WEBVEHICULOSJORDY
   DOTNET_VERSION: '8.0'
 
 on:
