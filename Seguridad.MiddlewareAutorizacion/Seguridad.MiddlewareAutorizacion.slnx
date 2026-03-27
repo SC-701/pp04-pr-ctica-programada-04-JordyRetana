@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Autorizacion.Abstracciones/Autorizacion.Abstracciones.csproj" />
+  <Project Path="Autorizacion.DA/Autorizacion.DA.csproj" />
+  <Project Path="Autorizacion.Flujo/Autorizacion.Flujo.csproj" />
+  <Project Path="Autorizacion.Middleware/Autorizacion.Middleware.csproj" />
+  <Project Path="Helpers/Helpers.csproj" />
+</Solution>

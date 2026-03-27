@@ -1,6 +1,9 @@
 ﻿CREATE TABLE [dbo].[Perfiles] (
-    [Id]     INT            NOT NULL,
-    [Nombre] NVARCHAR (100) NOT NULL,
-    PRIMARY KEY CLUSTERED ([Id] ASC)
+    [Id]                INT              NOT NULL,
+    [Nombre]            VARCHAR (MAX)    NOT NULL,
+    [FechaCreacion]     DATETIME         NULL,
+    [FechaModificacion] DATETIME         NULL,
+    [UsuarioCrea]       UNIQUEIDENTIFIER NULL,
+    [UsuarioModifica]   UNIQUEIDENTIFIER NULL,
+    CONSTRAINT [PK_Perfiles] PRIMARY KEY CLUSTERED ([Id] ASC)
 );
-

@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Reglas;
 using Servicios;
+using Autorizacion.Abstracciones.DA;
+using Autorizacion.Abstracciones.Flujo;
+using Autorizacion.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,12 +57,16 @@ builder.Services.AddScoped<IModeloFlujo, ModeloFlujo>();
 builder.Services.AddScoped<IVehiculoDA, VehiculoDA>();
 builder.Services.AddScoped<IMarcaDA, MarcaDA>();
 builder.Services.AddScoped<IModeloDA, ModeloDA>();
-builder.Services.AddScoped<IRepositorioDapper, RepositorioDapper>();
+builder.Services.AddScoped<Abstracciones.Interfaces.DA.IRepositorioDapper, DA.Repositorios.RepositorioDapper>();
 builder.Services.AddScoped<IRegistroServicio, RegistroServicio>();
 builder.Services.AddScoped<IRevisionServicio, RevisionServicio>();
 builder.Services.AddScoped<IRegistroReglas, RegistroReglas>();
 builder.Services.AddScoped<IRevisionReglas, RevisionReglas>();
 builder.Services.AddScoped<IConfiguracion, Configuracion>();
+
+builder.Services.AddTransient<IAutorizacionFlujo, Autorizacion.Flujo.AutorizacionFlujo>();
+builder.Services.AddTransient<ISeguridadDA, Autorizacion.DA.SeguridadDA>();
+builder.Services.AddTransient<Autorizacion.Abstracciones.DA.IRepositorioDapper, Autorizacion.DA.Repositorios.RepositorioDapper>();
 
 var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("No se configuró Jwt:Key");
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? throw new InvalidOperationException("No se configuró Jwt:Issuer");
@@ -116,6 +123,7 @@ app.UseHttpsRedirection();
 app.UseCors(politicaAcceso);
 
 app.UseAuthentication();
+app.AutorizacionClaims();
 app.UseAuthorization();
 
 app.MapControllers();

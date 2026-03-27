@@ -4,6 +4,53 @@
     ViewData["Title"] = "Login";
 }
 
+<style>
+    .auth-form .auth-input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .auth-form .auth-input-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        pointer-events: none;
+        color: #6c757d;
+        font-size: 1rem;
+    }
+
+    .auth-form .auth-input {
+        padding-left: 3rem !important;
+        min-height: 50px;
+        line-height: 1.4;
+    }
+
+    .auth-form .form-label.auth-label {
+        margin-bottom: .45rem;
+        display: inline-block;
+        font-weight: 600;
+    }
+
+    .auth-register-box {
+        margin-top: 1rem;
+        text-align: center;
+        font-size: .95rem;
+    }
+
+    .auth-register-box a {
+        font-weight: 700;
+        text-decoration: none;
+    }
+</style>
+
 <section class="auth-page py-5">
     <div class="container auth-container d-flex align-items-center">
         <div class="row w-100 align-items-center g-5">
@@ -67,6 +114,14 @@
                         <p>Ingresa tus credenciales para continuar</p>
                     </div>
 
+                    @if (!string.IsNullOrWhiteSpace(Model.MensajeExito))
+                    {
+                        <div class="alert alert-success auth-alert" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            @Model.MensajeExito
+                        </div>
+                    }
+
                     @if (!string.IsNullOrWhiteSpace(Model.MensajeError))
                     {
                         <div class="alert alert-danger auth-alert" role="alert">
@@ -103,6 +158,11 @@
                             Ingresar al sistema
                         </button>
                     </form>
+
+                    <div class="auth-register-box">
+                        <span class="text-muted">¿No tienes cuenta?</span>
+                        <a asp-page="/Seguridad/Registro" class="ms-1">Regístrate aquí</a>
+                    </div>
 
                     <div class="auth-footer-note">
                         <i class="bi bi-lock-fill me-1"></i>

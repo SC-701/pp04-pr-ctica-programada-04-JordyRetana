@@ -1,21 +1,23 @@
-﻿using Abstracciones.Interfaces.DA;
-using Microsoft.Data.SqlClient;
+﻿using Abstracciones.DA;
 using Microsoft.Extensions.Configuration;
+using System.Data.SqlClient;
 
 namespace DA.Repositorios
 {
     public class RepositorioDapper : IRepositorioDapper
     {
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration _configutarion;
+        private SqlConnection _connection;
 
-        public RepositorioDapper(IConfiguration configuration)
+        public RepositorioDapper(IConfiguration configutarion)
         {
-            _configuration = configuration;
+            _configutarion = configutarion;
+            _connection = new SqlConnection(_configutarion.GetConnectionString("BDSeguridad"));
         }
 
-        public SqlConnection ConexionBD()
+        public SqlConnection ObtenerRepositorioDapper()
         {
-            return new SqlConnection(_configuration.GetConnectionString("BD"));
+            return _connection;
         }
     }
 }

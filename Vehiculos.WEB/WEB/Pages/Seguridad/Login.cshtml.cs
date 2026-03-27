@@ -31,9 +31,14 @@ namespace Web.Pages.Seguridad
         public string Contrasenia { get; set; } = string.Empty;
 
         public string? MensajeError { get; set; }
+        public string? MensajeExito { get; set; }
 
         public void OnGet()
         {
+            if (TempData.ContainsKey("MensajeExito"))
+            {
+                MensajeExito = TempData["MensajeExito"]?.ToString();
+            }
         }
 
         public async Task<IActionResult> OnPostAsync()

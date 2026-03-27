@@ -86,9 +86,16 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link nav-pill"
+                                <a class="nav-link nav-pill @(ViewContext.RouteData.Values["page"]?.ToString() == "/Seguridad/Login" ? "active" : "")"
                                        asp-area="" asp-page="/Seguridad/Login">
                                     <i class="bi bi-person-circle me-1"></i> Iniciar sesión
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link nav-pill nav-cta @(ViewContext.RouteData.Values["page"]?.ToString() == "/Seguridad/Registro" ? "active" : "")"
+                                       asp-area="" asp-page="/Seguridad/Registro">
+                                    <i class="bi bi-person-plus me-1"></i> Registrarse
                                 </a>
                             </li>
                         }
@@ -136,6 +143,7 @@
                     else
                     {
                         <a asp-area="" asp-page="/Seguridad/Login" title="Iniciar sesión"><i class="bi bi-person-circle"></i></a>
+                        <a asp-area="" asp-page="/Seguridad/Registro" title="Registrarse"><i class="bi bi-person-plus"></i></a>
                     }
                 </div>
             </div>
