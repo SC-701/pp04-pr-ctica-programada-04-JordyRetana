@@ -14,7 +14,7 @@
 		<Nullable>enable</Nullable>
 
 		<PackageId>Autorizacion.Middleware</PackageId>
-		<Version>3.0.1</Version>
+		<Version>4.0.0</Version>
 		<Authors>Jordy</Authors>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
