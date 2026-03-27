@@ -65,30 +65,38 @@ namespace Web.Pages.Seguridad
             var respuesta = await cliente.PostAsJsonAsync(endpoint, usuario);
             var contenido = await respuesta.Content.ReadAsStringAsync();
 
+           
             if (!respuesta.IsSuccessStatusCode)
-            {
-                if (!string.IsNullOrWhiteSpace(contenido))
-                {
-                    try
-                    {
-                        var errorApi = JsonSerializer.Deserialize<RespuestaLogin>(
-                            contenido,
-                            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+{
+    if (!string.IsNullOrWhiteSpace(contenido) &&
+        contenido.Contains("<html", StringComparison.OrdinalIgnoreCase))
+    {
+        MensajeError = "El servicio de seguridad no está disponible en este momento. Intenta nuevamente más tarde.";
+        return Page();
+    }
 
-                        MensajeError = errorApi?.Mensaje ?? "No fue posible registrar el usuario.";
-                    }
-                    catch
-                    {
-                        MensajeError = contenido;
-                    }
-                }
-                else
-                {
-                    MensajeError = "No fue posible registrar el usuario.";
-                }
+    if (!string.IsNullOrWhiteSpace(contenido))
+    {
+        try
+        {
+            var errorApi = JsonSerializer.Deserialize<RespuestaLogin>(
+                contenido,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                return Page();
-            }
+            MensajeError = errorApi?.Mensaje ?? "No fue posible registrar el usuario.";
+        }
+        catch
+        {
+            MensajeError = "No fue posible registrar el usuario.";
+        }
+    }
+    else
+    {
+        MensajeError = "No fue posible registrar el usuario.";
+    }
+
+    return Page();
+}
 
             TempData["MensajeExito"] = "Usuario registrado correctamente. Ahora puedes iniciar sesión.";
             return RedirectToPage("/Seguridad/Login");
