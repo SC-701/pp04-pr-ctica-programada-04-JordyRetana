@@ -4,7 +4,7 @@ using DA.Repositorios;
 using Flujo;
 using DA;
 using Abstracciones.Reglas;
-using BC;
+using Reglas;
 using Abstracciones.Modelos;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

@@ -21,42 +21,37 @@ namespace Reglas
             _usuarioDA = usuarioDA;
         }
 
-public async Task<Token> LoginAync(LoginBase login)
-{
-    Token respuestaToken = new Token()
-    {
-        AccessToken = string.Empty,
-        ValidacionExitosa = false
-    };
+        public async Task<Token> LoginAync(LoginBase login)
+        {
+            Token respuestaToken = new Token()
+            {
+                AccessToken = string.Empty,
+                ValidacionExitosa = false
+            };
 
-    _usuario = await _usuarioDA.ObtenerUsuario(new Usuario
-    {
-        CorreoElectronico = login.CorreoElectronico,
-        NombreUsuario = null
-    });
+            _usuario = await _usuarioDA.ObtenerUsuario(new Usuario
+            {
+                CorreoElectronico = login.CorreoElectronico,
+                NombreUsuario = null
+            });
 
-    if (_usuario == null)
-    {
-        throw new Exception("No se encontró el usuario.");
-    }
+            if (_usuario == null)
+                return respuestaToken;
 
-    if (login.PasswordHash != _usuario.PasswordHash)
-    {
-        throw new Exception($"Hash distinto. Enviado: {login.PasswordHash} | Guardado: {_usuario.PasswordHash}");
-    }
+            var resultadoVerificacionCredenciales = await VerificarHashContraseniaAsync(login);
+            if (!resultadoVerificacionCredenciales)
+                return respuestaToken;
 
-    TokenConfiguracion? tokenConfiguracion = _configuration.GetSection("Jwt").Get<TokenConfiguracion>();
-    if (tokenConfiguracion == null)
-    {
-        throw new Exception("No se encontró la configuración Jwt.");
-    }
+            TokenConfiguracion? tokenConfiguracion = _configuration.GetSection("Jwt").Get<TokenConfiguracion>();
+            if (tokenConfiguracion == null)
+                return respuestaToken;
 
-    JwtSecurityToken token = await GenerarTokenJWT(tokenConfiguracion);
-    respuestaToken.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
-    respuestaToken.ValidacionExitosa = true;
+            JwtSecurityToken token = await GenerarTokenJWT(tokenConfiguracion);
+            respuestaToken.AccessToken = new JwtSecurityTokenHandler().WriteToken(token);
+            respuestaToken.ValidacionExitosa = true;
 
-    return respuestaToken;
-}
+            return respuestaToken;
+        }
 
         private Task<bool> VerificarHashContraseniaAsync(LoginBase login)
         {
