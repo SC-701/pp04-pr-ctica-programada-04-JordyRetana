@@ -13,31 +13,35 @@ using Autorizacion.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var tokenConfiguration = builder.Configuration.GetSection("Jwt").Get<TokenConfiguracion>();
 
-var tokenConfiguration = builder.Configuration.GetSection("Token").Get<TokenConfiguracion>();
+if (tokenConfiguration == null)
+{
+    throw new InvalidOperationException("No se encontró la configuración Jwt.");
+}
+
 var jwtIssuer = tokenConfiguration.Issuer;
 var jwtAudience = tokenConfiguration.Audience;
 var jwtKey = tokenConfiguration.key;
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
-    options => {
-        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer=true,
-            ValidateAudience=true,
-            ValidateLifetime=true,
-            ValidateIssuerSigningKey=true,
-            ValidIssuer=jwtIssuer,
-            ValidAudience= jwtAudience,
-            IssuerSigningKey= new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
         };
-    }
-    );
+    });
 
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -51,10 +55,8 @@ builder.Services.AddTransient<Autorizacion.Abstracciones.Flujo.IAutorizacionFluj
 builder.Services.AddTransient<Autorizacion.Abstracciones.DA.ISeguridadDA, Autorizacion.DA.SeguridadDA>();
 builder.Services.AddTransient<Autorizacion.Abstracciones.DA.IRepositorioDapper, Autorizacion.DA.Repositorios.RepositorioDapper>();
 
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -62,6 +64,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 app.AutorizacionClaims();
 app.UseAuthorization();
 
