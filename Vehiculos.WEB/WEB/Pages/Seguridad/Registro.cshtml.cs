@@ -37,7 +37,6 @@ namespace Web.Pages.Seguridad
         public string ConfirmarContrasenia { get; set; } = string.Empty;
 
         public string? MensajeError { get; set; }
-        public string? MensajeExito { get; set; }
 
         public void OnGet()
         {
@@ -65,38 +64,37 @@ namespace Web.Pages.Seguridad
             var respuesta = await cliente.PostAsJsonAsync(endpoint, usuario);
             var contenido = await respuesta.Content.ReadAsStringAsync();
 
-           
             if (!respuesta.IsSuccessStatusCode)
-{
-    if (!string.IsNullOrWhiteSpace(contenido) &&
-        contenido.Contains("<html", StringComparison.OrdinalIgnoreCase))
-    {
-        MensajeError = "El servicio de seguridad no está disponible en este momento. Intenta nuevamente más tarde.";
-        return Page();
-    }
+            {
+                if (!string.IsNullOrWhiteSpace(contenido) &&
+                    contenido.Contains("<html", StringComparison.OrdinalIgnoreCase))
+                {
+                    MensajeError = "El servicio de seguridad no está disponible en este momento. Intenta nuevamente más tarde.";
+                    return Page();
+                }
 
-    if (!string.IsNullOrWhiteSpace(contenido))
-    {
-        try
-        {
-            var errorApi = JsonSerializer.Deserialize<RespuestaLogin>(
-                contenido,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (!string.IsNullOrWhiteSpace(contenido))
+                {
+                    try
+                    {
+                        var errorApi = JsonSerializer.Deserialize<RespuestaLogin>(
+                            contenido,
+                            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            MensajeError = errorApi?.Mensaje ?? "No fue posible registrar el usuario.";
-        }
-        catch
-        {
-            MensajeError = "No fue posible registrar el usuario.";
-        }
-    }
-    else
-    {
-        MensajeError = "No fue posible registrar el usuario.";
-    }
+                        MensajeError = errorApi?.Mensaje ?? "No fue posible registrar el usuario.";
+                    }
+                    catch
+                    {
+                        MensajeError = "No fue posible registrar el usuario.";
+                    }
+                }
+                else
+                {
+                    MensajeError = "No fue posible registrar el usuario.";
+                }
 
-    return Page();
-}
+                return Page();
+            }
 
             TempData["MensajeExito"] = "Usuario registrado correctamente. Ahora puedes iniciar sesión.";
             return RedirectToPage("/Seguridad/Login");
