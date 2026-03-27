@@ -1,0 +1,67 @@
+name: Publicar paquetes NuGet de Autorización
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'Seguridad.MiddlewareAutorizacion/**'
+      - '.github/workflows/publicar_nuget.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restaurar dependencias
+        run: |
+          dotnet restore Seguridad.MiddlewareAutorizacion/Autorizacion.Abstracciones/Autorizacion.Abstracciones.csproj
+          dotnet restore Seguridad.MiddlewareAutorizacion/Autorizacion.DA/Autorizacion.DA.csproj
+          dotnet restore Seguridad.MiddlewareAutorizacion/Abstracciones.BW/Autorizacion.Flujo.csproj
+          dotnet restore Seguridad.MiddlewareAutorizacion/Autorizacion.Middleware/Autorizacion.Middleware.csproj
+
+      - name: Compilar en Release
+        run: |
+          dotnet build Seguridad.MiddlewareAutorizacion/Autorizacion.Abstracciones/Autorizacion.Abstracciones.csproj --configuration Release --no-restore
+          dotnet build Seguridad.MiddlewareAutorizacion/Autorizacion.DA/Autorizacion.DA.csproj --configuration Release --no-restore
+          dotnet build Seguridad.MiddlewareAutorizacion/Abstracciones.BW/Autorizacion.Flujo.csproj --configuration Release --no-restore
+          dotnet build Seguridad.MiddlewareAutorizacion/Autorizacion.Middleware/Autorizacion.Middleware.csproj --configuration Release --no-restore
+
+      - name: Limpiar paquetes anteriores
+        run: |
+          rm -rf ./nupkgs
+          mkdir -p ./nupkgs
+
+      - name: Empaquetar proyectos
+        run: |
+          dotnet pack Seguridad.MiddlewareAutorizacion/Autorizacion.Abstracciones/Autorizacion.Abstracciones.csproj --configuration Release --no-build --output ./nupkgs
+          dotnet pack Seguridad.MiddlewareAutorizacion/Autorizacion.DA/Autorizacion.DA.csproj --configuration Release --no-build --output ./nupkgs
+          dotnet pack Seguridad.MiddlewareAutorizacion/Abstracciones.BW/Autorizacion.Flujo.csproj --configuration Release --no-build --output ./nupkgs
+          dotnet pack Seguridad.MiddlewareAutorizacion/Autorizacion.Middleware/Autorizacion.Middleware.csproj --configuration Release --no-build --output ./nupkgs
+
+      - name: Configurar origen GitHub Packages
+        run: |
+          dotnet nuget add source "https://nuget.pkg.github.com/SC-701/index.json" \
+            --name "github" \
+            --username "${{ github.actor }}" \
+            --password "${{ secrets.GITHUB_TOKEN }}" \
+            --store-password-in-clear-text
+
+      - name: Publicar paquetes en GitHub Packages
+        run: |
+          dotnet nuget push ./nupkgs/*.nupkg \
+            --source "github" \
+            --api-key "${{ secrets.GITHUB_TOKEN }}" \
+            --skip-duplicate  
