@@ -43,7 +43,7 @@ jobs:
           dotnet restore Abstracciones/Abstracciones.csproj
           dotnet restore DA/DA.csproj
           dotnet restore Flujo/Flujo.csproj
-          dotnet restore Reaglas/Reglas.csproj
+          dotnet restore Reglas/Reglas.csproj
           dotnet restore Servicios/Servicios.csproj
           dotnet restore API/API.csproj
 
@@ -53,7 +53,7 @@ jobs:
           dotnet build Abstracciones/Abstracciones.csproj --configuration Release --no-restore
           dotnet build DA/DA.csproj --configuration Release --no-restore
           dotnet build Flujo/Flujo.csproj --configuration Release --no-restore
-          dotnet build Reaglas/Reglas.csproj --configuration Release --no-restore
+          dotnet build Reglas/Reglas.csproj --configuration Release --no-restore
           dotnet build Servicios/Servicios.csproj --configuration Release --no-restore
           dotnet build API/API.csproj --configuration Release --no-restore
 
