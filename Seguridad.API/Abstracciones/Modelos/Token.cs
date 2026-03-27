@@ -1,27 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Abstracciones.Modelos
 {
     public class Token
     {
         public bool ValidacionExitosa { get; set; }
-        public string AccessToken { get; set; }
+        public string AccessToken { get; set; } = string.Empty;
     }
 
     public class TokenConfiguracion
     {
         [Required]
-        [StringLength(100,MinimumLength =32)]
-        public string key { get; set; }
+        [StringLength(100, MinimumLength = 32)]
+        public string key { get; set; } = string.Empty;
+
         [Required]
-        public string Issuer { get; set; }
+        public string Issuer { get; set; } = string.Empty;
+
         [Required]
-        public double Expires { get; set; }
-        public string Audience { get; set; }
+        public int ExpireMinutes { get; set; }
+
+        public string Audience { get; set; } = string.Empty;
     }
 }
