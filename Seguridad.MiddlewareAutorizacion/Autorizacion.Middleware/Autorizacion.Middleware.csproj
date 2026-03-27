@@ -2,6 +2,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Autorizacion.Abstracciones\Autorizacion.Abstracciones.csproj" />
+		<ProjectReference Include="..\Autorizacion.Flujo\Autorizacion.Flujo.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

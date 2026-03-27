@@ -1,13 +1,14 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 using Autorizacion.Abstracciones.Flujo;
-using Abstracciones.Modelos;
+using Autorizacion.Abstracciones.Modelos;
 
 namespace Autorizacion.Middleware
 {
     public class ClaimsPerfiles
     {
         private readonly RequestDelegate _next;
-        private IAutorizacionFlujo _autorizacionFlujo;
+        private readonly IAutorizacionFlujo _autorizacionFlujo;
 
         public ClaimsPerfiles(RequestDelegate next, IAutorizacionFlujo autorizacionFlujo)
         {
@@ -19,7 +20,7 @@ namespace Autorizacion.Middleware
         {
             if (httpContext.User.Identity != null && httpContext.User.Identity.IsAuthenticated)
             {
-                var perfiles = await obtenerInformacionPerfiles(httpContext);
+                var perfiles = await ObtenerInformacionPerfiles(httpContext);
                 var claims = perfiles.Select(perfil => new Claim(ClaimTypes.Role, perfil.Id.ToString())).ToList();
 
                 if (httpContext.User.Identity is ClaimsIdentity appIdentity)
@@ -31,7 +32,7 @@ namespace Autorizacion.Middleware
             await _next(httpContext);
         }
 
-        private async Task<IEnumerable<Perfil>> obtenerInformacionPerfiles(HttpContext httpContext)
+        private async Task<IEnumerable<Perfil>> ObtenerInformacionPerfiles(HttpContext httpContext)
         {
             var nombreUsuario = httpContext.User.Claims
                 .FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
