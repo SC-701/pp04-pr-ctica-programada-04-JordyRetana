@@ -6,14 +6,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Autorizacion.Abstracciones" Version="4.0.0" />
-    <PackageReference Include="Autorizacion.DA" Version="4.0.0" />
-    <PackageReference Include="Autorizacion.Flujo" Version="4.0.0" />
-    <PackageReference Include="Autorizacion.Middleware" Version="4.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Autorizacion.Abstracciones" Version="2.0.5" />
+		<PackageReference Include="Autorizacion.DA" Version="2.0.5" />
+		<PackageReference Include="Autorizacion.Flujo" Version="2.0.5" />
+		<PackageReference Include="Autorizacion.Middleware" Version="2.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Abstracciones\Abstracciones.csproj" />

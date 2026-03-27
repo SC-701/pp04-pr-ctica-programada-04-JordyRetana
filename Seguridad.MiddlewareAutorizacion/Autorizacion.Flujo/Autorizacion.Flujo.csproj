@@ -10,7 +10,7 @@
 		<Nullable>enable</Nullable>
 
 		<PackageId>Autorizacion.Flujo</PackageId>
-		<Version>4.0.0</Version>
+		<Version>2.0.5</Version>
 		<Authors>Jordy</Authors>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	</PropertyGroup>
