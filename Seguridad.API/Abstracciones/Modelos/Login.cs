@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Abstracciones.Modelos
 {
     public class LoginBase
     {
+        public string? NombreUsuario { get; set; }
+
         [Required]
-        public string NombreUsuario { get; set; }
-        [Required]
-        public string PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = string.Empty;
+
         [Required]
         [EmailAddress]
-        public string CorreoElectronico { get; set; }
+        public string CorreoElectronico { get; set; } = string.Empty;
     }
+
     public class Login : LoginBase
     {
         [Required]
